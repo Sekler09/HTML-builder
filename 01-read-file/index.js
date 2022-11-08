@@ -8,4 +8,4 @@ readStream.on('data', (chunk, error) =>{
   console.log(chunk)
 })
 
-readStream.on('end', () => 0 )
+readStream.on('end', () => {})
