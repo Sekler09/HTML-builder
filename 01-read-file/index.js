@@ -1,8 +1,11 @@
 const fs = require('fs')
 const path = require('path')
-
 const txtPath = path.join(path.dirname(__filename) + '/text.txt')
-fs.readFile(txtPath, 'utf8', (err, data) => {
-  if(err) throw err
-  console.log(data)
+
+const readStream = fs.createReadStream(txtPath, "utf8")
+readStream.on('data', (chunk, error) =>{
+  if(error) throw error
+  console.log(chunk)
 })
+
+readStream.on('end', () => 0 )
