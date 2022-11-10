@@ -1,6 +1,7 @@
 const fsPr = require('fs/promises')
 const fs = require('fs')
 const path = require('path')
+const { get } = require('http')
 const options = {withFileTypes: true}
 const folder = path.join(path.dirname(__filename), 'files')
 
@@ -17,8 +18,17 @@ const copyDir = async (dir) => {
       .access(copyDir, fs.constants.F_OK)
       .then(() => (ex = true))
       .catch(() => (ex = false))
-    if (!ex) await createDir(copyDir)
     const files = await getFiles(dir, options)
+    if (!ex) await createDir(copyDir)
+    else {
+      const oldFiles = await getFiles(copyDir, options)
+      oldFiles.map(file =>{
+        const filePath = path.join(copyDir, file.name)
+        fs.unlink(filePath, (err) => {
+          if (err) throw err
+        })
+      } )
+    }
     files.map(async (file) => {
       const filePath = path.join(dir, file.name)
       const copyFilePath = path.join(copyDir, file.name)
@@ -38,6 +48,5 @@ const getFiles = async (folderPath, options) => {
     console.log(error)
   }
 }
-
 
 copyDir(folder)
