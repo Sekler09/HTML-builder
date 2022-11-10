@@ -38,9 +38,24 @@ const getCssFiles = async (folderPath, options) => {
   }
 }
 
-const createBundle = async () => {
+const createBundle = async (bundle) => {
+  const ex = await bundleIsExist(bundle)
+  if (ex) {
+    fs.unlink(bundle, (err) => {
+      if (err) throw err
+    })
+  }
   const cssFiles = await getCssFiles(styles, options)
   fillBundle(styles, cssFiles)
 }
 
-createBundle()
+const bundleIsExist = async (bundle) => {
+  let ex
+  await fsPr
+    .access(bundle, fs.constants.F_OK)
+    .then(() => (ex = true))
+    .catch(() => (ex = false))
+  return ex
+}
+
+createBundle(bundle)
