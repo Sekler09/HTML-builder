@@ -32,7 +32,7 @@ const copyDir = async (dir) => {
 const getFiles = async (folderPath, options) => {
   try {
     const files = await fsPr.readdir(folderPath, options)
-    files.filter((file) => file.isFile()).map((file) => file.name)
+    files.filter((file) => file.isFile())
     return files
   } catch (error) {
     console.log(error)
